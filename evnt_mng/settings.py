@@ -1,10 +1,10 @@
 
-
+from decouple import config
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-vdd!n*8ic!77j!37)ur@ba0@mre*-6c%i6ium&5obys+9j@fww'
+SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = True
 
@@ -20,6 +20,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'event',
+    'core',
+    'user',
 ]
 
 MIDDLEWARE = [
@@ -56,13 +58,15 @@ WSGI_APPLICATION = 'evnt_mng.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'event_management',
-        'USER': 'postgres',
-        'PASSWORD': 'amit007',
-        "HOST": "localhost",  
-        "PORT": "5432", 
+        'NAME': config('DB_NAME', default =''),
+        'USER': config('DB_USER', default =''),
+        'PASSWORD': config('DB_PASSWORD', default =''),
+        "HOST": config('DB_HOST', default =''),  
+        "PORT": config('DB_PORT', cast=int), 
     }
 }
+
+FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:8000')
 
 
 
@@ -96,6 +100,13 @@ USE_I18N = True
 
 USE_TZ = True
 
+STATICFILES_DIRS = [
+    BASE_DIR / 'static'
+]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
@@ -106,3 +117,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+EMAIL_BACKEND=config('EMAIL_BACKEND')
+EMAIL_HOST=config('EMAIL_HOST')
+EMAIL_USE_TLS=config('EMAIL_USE_TLS',cast=bool)
+EMAIL_PORT=config('EMAIL_PORT')
+EMAIL_HOST_USER=config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD=config('EMAIL_HOST_PASSWORD')
