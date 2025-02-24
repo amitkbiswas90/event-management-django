@@ -1,4 +1,4 @@
-
+import dj_database_url
 from decouple import config
 from pathlib import Path
 
@@ -8,9 +8,9 @@ SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
-
+CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com','http://127.0.0.1:8000']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -55,15 +55,22 @@ TEMPLATES = [
 WSGI_APPLICATION = 'evnt_mng.wsgi.application'
 
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': config('DB_NAME', default =''),
+#         'USER': config('DB_USER', default =''),
+#         'PASSWORD': config('DB_PASSWORD', default =''),
+#         "HOST": config('DB_HOST', default =''),  
+#         "PORT": config('DB_PORT', cast=int), 
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME', default =''),
-        'USER': config('DB_USER', default =''),
-        'PASSWORD': config('DB_PASSWORD', default =''),
-        "HOST": config('DB_HOST', default =''),  
-        "PORT": config('DB_PORT', cast=int), 
-    }
+    'default': dj_database_url.config(
+        default='postgresql://event_management_db_z3xd_user:XjWtFiOigIfpntGONj0fcvLo4X64pyip@dpg-cuu4b4l6l47c73abi2qg-a.oregon-postgres.render.com/event_management_db_z3xd',
+        conn_max_age=600
+    )
 }
 
 FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:8000')
