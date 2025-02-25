@@ -75,7 +75,7 @@ DATABASES = {
     )
 }
 
-FRONTEND_URL = config('FRONTEND_URL')
+FRONTEND_URL = config('FRONTEND_URL', default='https://eventx-ak64.onrender.com')
 
 
 
