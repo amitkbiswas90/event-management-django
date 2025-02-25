@@ -75,7 +75,7 @@ DATABASES = {
     )
 }
 
-FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:8000')
+FRONTEND_URL = config('FRONTEND_URL')
 
 
 
