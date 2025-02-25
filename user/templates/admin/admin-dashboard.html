@@ -1,10 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'css/output.css' %}">
   </head>
   <body>
     <header class="bg-white shadow-md">
@@ -14,11 +15,12 @@
             >EventX</a
           >
           <div class="hidden md:flex space-x-4">
-            <a
-              href="{% url 'admin-dashboard' %}"
+            <a href="{% url 'admin-dashboard' %}"
               class="text-gray-600 hover:text-gray-800"
-              >Dashboard</a
-            >
+              >Dashboard</a>
+            <a href="{% url 'participants-list' %}"
+              class="text-gray-600 hover:text-gray-800"
+              >Paticipents</a>
             <a href="{% url 'group-list' %}" class="text-gray-600 hover:text-gray-800"
               >Groups</a
             >
@@ -98,7 +100,7 @@
     </header>
 
     <main>
-      {% block content %}
+      {% block contents %}
         {% include "admin/user-list.html" %}
       {% endblock %}
       

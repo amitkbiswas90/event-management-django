@@ -90,9 +90,21 @@ class CreateGroupForm(StyleMixin, forms.ModelForm):
         queryset=Permission.objects.all(),
         widget=forms.CheckboxSelectMultiple,
         required=False,
-        label='Assign Permissions'
+        label='Permissions'
     )
 
     class Meta:
         model = Group
         fields = ['name', 'permissions']
+        labels = {
+            'name': 'Group Name'
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['permissions'].queryset = Permission.objects.select_related('content_type')
+        
+        self.fields['name'].widget.attrs.update({
+            'class': 'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+        })
+    

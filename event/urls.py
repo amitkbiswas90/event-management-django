@@ -8,5 +8,5 @@ urlpatterns = [
     path('update-event/<int:id>/', update_event, name='update-event'),
     path('delete-event/<int:id>/', delete_event,name='delete-event'),
     path('organizer-dashboard/', organizer_dashboard, name='organizer-dashboard'), 
-    path('event/<int:event_id>/rsvp/',rsvp_event, name='event'),
+    path('event/<int:event_id>/rsvp/', rsvp_event, name='rsvp-event'),
 ]

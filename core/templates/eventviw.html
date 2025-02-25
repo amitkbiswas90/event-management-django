@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block contents %}
+    <div class="container mx-auto px-4 sm:px-6 py-8">
+        <!-- Search Form -->
+        <div class="mb-8">
+            <form method="GET">
+                <div class="bg-blue-600 px-4 sm:px-8 py-6 rounded-lg">
+                    <div class="max-w-2xl mx-auto">
+                        <div class="flex flex-col sm:flex-row gap-4 items-center">
+                            <input 
+                                class="w-full sm:flex-1 rounded-md py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                type="text" 
+                                name="q" 
+                                value="{{ search_query }}" 
+                                placeholder="Search events name or location"
+                            >
+                            <button 
+                                type="submit" 
+                                class="w-full sm:w-auto bg-white text-blue-600 font-semibold py-3 px-6 rounded-md text-sm hover:bg-slate-100 transition-colors whitespace-nowrap"
+                            >
+                                Search Events
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        {% if events %}               
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for event in events %}
+                <div class="bg-white shadow-[0_4px_12px_-5px_rgba(0,0,0,0.2)] hover:shadow-lg transition-shadow duration-200 rounded-xl overflow-hidden">
+                    <div class="p-4 sm:p-6">
+                        <h3 class="text-lg sm:text-xl font-bold text-gray-800 truncate">{{ event.name }}</h3>
+                    </div>
+
+                    <div class="aspect-video relative">
+                        <img 
+                            src="{{ event.asset.url }}" 
+                            class="w-full h-full object-cover"
+                            alt="{{ event.name }}"
+                            loading="lazy"
+                        >
+                    </div>
+
+                    <div class="p-4 sm:p-6">
+                        <div class="flex items-center mb-4">
+                            <svg class="w-5 h-5 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            <span class="text-sm sm:text-base text-gray-800 truncate">{{ event.location }}</span>
+                        </div>
+
+                        <p class="text-sm text-gray-600 mb-4 line-clamp-3">{{ event.description }}</p>
+
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                            <div class="flex flex-wrap gap-3 text-sm text-gray-600">
+                                <span class="flex items-center bg-gray-100 px-3 py-1.5 rounded-md">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    </svg>
+                                    {{ event.date|date:"M d, Y" }}
+                                </span>
+                                <span class="flex items-center bg-gray-100 px-3 py-1.5 rounded-md">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    {{ event.time|time:"H:i" }}
+                                </span>
+                            </div>
+                            <form action="{% url 'participant-dashboard' %}" method="POST" class="inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="event_id" value="{{ event.id }}">
+                                <button type="submit" class="bg-blue-500 text-white p-2">RSVP Now</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+        {% else %}
+            <div class="max-w-md mx-auto text-center py-12 px-6 bg-white rounded-xl border border-gray-200 shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">No Matching Events Found</h3>
+                <p class="text-gray-600 text-sm sm:text-base">
+                    We couldn't find any events matching your search criteria.
+                    <br class="hidden sm:block">
+                    Try adjusting your filters or search terms.
+                </p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock  %} 
