@@ -16,6 +16,7 @@ CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com','http://127.0.0.1:8000']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
+    'user.apps.UserConfig',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -23,7 +24,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'event',
-    'user',
 ]
 
 MIDDLEWARE = [
