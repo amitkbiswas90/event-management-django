@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 from event.models import Event, RSVP
 from django.utils import timezone
 from django.db.models import Count, Q
+from django.contrib.auth import get_user_model
+User = get_user_model() 
 
 def is_organizer(user):
     return user.groups.filter(name='Organizer').exists()
@@ -133,6 +135,6 @@ def rsvp_event(request, event_id):
     return redirect('event-detail', event_id=event.id)
 
 @login_required
-def participant_dashboard(request):
+def rvs(request):
     rsvps = RSVP.objects.filter(user=request.user).select_related('event')
-    return render(request, 'participant_dashboard.html', {'rsvps': rsvps})
+    return render(request, 'rvs_system.html', {'user_rsvps': rsvps})

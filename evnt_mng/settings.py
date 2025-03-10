@@ -75,12 +75,13 @@ DATABASES = {
     )
 }
 
+# FRONTEND_URL = config('FRONTEND_URL', default='https://eventx-ak64.onrender.com')
+
 FRONTEND_URL = config('FRONTEND_URL', default='https://eventx-ak64.onrender.com')
 
 
 
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -103,11 +104,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Dhaka'
+USE_TZ = True
 
 USE_I18N = True
 
-USE_TZ = True
 
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
@@ -117,13 +118,16 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
+BACKEND_URL = 'http://127.0.0.1:8000'
+
+PASSWORD_RESET_TIMEOUT = 604800
+LOGIN_REDIRECT_URL = 'home' 
+AUTH_USER_MODEL = 'user.CustomUser'
+
+
 
 STATIC_URL = 'static/'
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

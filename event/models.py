@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
 
 class Category(models.Model):
     category_name = models.CharField(max_length=250, unique=True)
@@ -35,7 +38,7 @@ class RSVP(models.Model):
     user = models.ForeignKey(
         User, 
         on_delete=models.CASCADE,
-        related_name='rsvp'  # Explicitly set user's reverse relationship
+        related_name='rsvp'  
     )
     event = models.ForeignKey(
         'Event', 

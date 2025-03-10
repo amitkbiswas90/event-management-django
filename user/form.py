@@ -1,39 +1,72 @@
 from django import forms
 import re
-from django.contrib.auth.models import User, Permission, Group
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import Permission, Group
+from django.contrib.auth.forms import (
+    AuthenticationForm, 
+    UserCreationForm,
+    UserChangeForm,
+    PasswordChangeForm,
+    PasswordResetForm,
+    SetPasswordForm,
+)
+from .models import CustomUser
 
 class StyleMixin:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        placeholder_mapping = {
+            'username': 'Enter your username',
+            'first_name': 'Enter your first name',
+            'last_name': 'Enter your last name',
+            'email': 'Enter your email address',
+            'password1': 'Create password',
+            'password2': 'Confirm password',
+            'phone_number': '+8801000000000'
+        }
+        
         for field_name, field in self.fields.items():
-            # Add base classes to all widgets
-            field.widget.attrs.update({
-                'class': 'px-2 py-2 w-full border-b-2 focus:border-[#333] outline-none text-sm bg-white',
-                'placeholder': f'Enter your {field.label.lower()}'
-            })
-            
-            # Special handling for specific field types
+            base_classes = 'px-2 py-2 w-full border-b-2 focus:border-blue-500 outline-none text-sm bg-white'
+            field.widget.attrs.update({'class': base_classes})
+
+            # Set placeholders based on field type and name
             if isinstance(field.widget, forms.PasswordInput):
-                field.widget.attrs['placeholder'] = 'Enter your password'
+                if field_name == 'password2':
+                    field.widget.attrs['placeholder'] = placeholder_mapping.get(field_name, 'Confirm password')
+                else:
+                    field.widget.attrs['placeholder'] = placeholder_mapping.get(field_name, 'Enter password')
+                    
             elif isinstance(field.widget, forms.EmailInput):
-                field.widget.attrs['placeholder'] = 'Enter your email address'
-            elif isinstance(field.widget, forms.Select):
+                field.widget.attrs['placeholder'] = placeholder_mapping.get(field_name, 'Enter your email')
+                
+            elif isinstance(field.widget, forms.TextInput):
+                field.widget.attrs['placeholder'] = placeholder_mapping.get(
+                    field_name, 
+                    'Enter ' + field.label.lower() if field.label else 'Enter text'
+                )
+                if field_name == 'phone_number':
+                    field.widget.attrs['pattern'] = r'^\+?1?\d{9,15}$'
+                    
+            elif isinstance(field.widget, forms.FileInput):
                 field.widget.attrs.update({
-                    'class': 'px-2 py-2 w-full border-b-2 focus:border-[#333] outline-none text-sm bg-white appearance-none'
+                    'class': 'block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100',
+                    'accept': 'image/*'
                 })
+                
+            elif isinstance(field.widget, forms.Select):
+                field.widget.attrs['class'] += ' appearance-none'
+                field.widget.attrs['placeholder'] = 'Select ' + field.label.lower()
 
-
-class CustomRegistrationForm(StyleMixin,forms.ModelForm):
-    password1 = forms.CharField(widget=forms.PasswordInput, label="Password")
-    confirm_password = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
+class CustomRegistrationForm(StyleMixin, UserCreationForm):
+    password1 = forms.CharField(
+        label="Password",
+    )
+    password2 = forms.CharField(label="Confirm Password")
 
     class Meta:
-        model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'confirm_password']
-        help_texts = {
-            'username': None,
-        }
+        model = CustomUser
+        fields = ['username', 'first_name', 'last_name', 'email']
+        help_texts = {'username': None}
+
 
     def clean_password1(self):
         password1 = self.cleaned_data.get('password1')
@@ -54,27 +87,11 @@ class CustomRegistrationForm(StyleMixin,forms.ModelForm):
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        if User.objects.filter(email=email).exists():
-            raise forms.ValidationError("Email already exists")
+        if CustomUser.objects.filter(email=email).exists():
+            raise forms.ValidationError("This email address is already in use.")
         return email
 
-    def clean(self):
-        cleaned_data = super().clean()
-        password1 = cleaned_data.get('password1')
-        confirm_password = cleaned_data.get('confirm_password')
-        if password1 and confirm_password and password1 != confirm_password:
-            raise forms.ValidationError("Passwords do not match")
-        return cleaned_data
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.set_password(self.cleaned_data["password1"])
-        user.is_active = False  # Ensure user is inactive
-        if commit:
-            user.save()
-        return user
-
-class LoginForm(StyleMixin,AuthenticationForm):
+class LoginForm(StyleMixin, AuthenticationForm):
     username = forms.CharField(label="Username", max_length=254)
     password = forms.CharField(label="Password", widget=forms.PasswordInput)
 
@@ -96,15 +113,43 @@ class CreateGroupForm(StyleMixin, forms.ModelForm):
     class Meta:
         model = Group
         fields = ['name', 'permissions']
-        labels = {
-            'name': 'Group Name'
-        }
+        labels = {'name': 'Group Name'}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['permissions'].queryset = Permission.objects.select_related('content_type')
+
+class CustomUserChangeForm(StyleMixin, UserChangeForm):
+    class Meta:
+        model = CustomUser
+        fields = ('first_name', 'last_name', 'email', 'phone_number', 'profile_picture')
+        widgets = {
+            'profile_picture': forms.FileInput()
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields.pop('password', None)
+        self.fields['profile_picture'].required = False
+
+class CustomPasswordChangeForm(StyleMixin, PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         
-        self.fields['name'].widget.attrs.update({
-            'class': 'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
-        })
+        self.fields['old_password'].widget.attrs['placeholder'] = 'Current password'
+        self.fields['new_password1'].widget.attrs['placeholder'] = 'New password'
+        self.fields['new_password2'].widget.attrs['placeholder'] = 'Confirm new password'
+        
+        for field in self.fields.values():
+            field.help_text = ''  
+            field.widget.attrs.pop('aria-describedby', None)  
+
+class CustomPasswordResetForm(StyleMixin, PasswordResetForm):
+    email = forms.EmailField(
+        label="Email",
+        widget=forms.EmailInput(attrs={'placeholder': 'Enter your registered email'})
+    )
+
+class CustomPasswordResetConfirmForm(StyleMixin, SetPasswordForm):
+    pass
     
