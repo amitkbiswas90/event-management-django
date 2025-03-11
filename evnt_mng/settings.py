@@ -78,8 +78,8 @@ DATABASES = {
 
 
 
-FRONTEND_URL = 'https://event-management-django-sdqd.onrender.com/'
-BACKEND_URL = 'https://event-management-django-sdqd.onrender.com/'
+FRONTEND_URL = 'https://event-management-django-sdqd.onrender.com'
+BACKEND_URL = 'https://event-management-django-sdqd.onrender.com'
 
 
 
