@@ -70,7 +70,7 @@ WSGI_APPLICATION = 'evnt_mng.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://event_management_db_ttx3_user:Hd7nKBx6rTkoBOy7zISkkP9Rx5kyySVq@dpg-cv7nnflumphs73frlba0-a.oregon-postgres.render.com/event_management_db_ttx3',
+        default='postgresql://event_management_db_014m_user:6w5QosmeD6MHq5kOxiAkkwXKf9tLUyYK@dpg-cv7ojdnnoe9s73erlsig-a.oregon-postgres.render.com/event_management_db_014m',
         conn_max_age=600
     )
 }
@@ -78,8 +78,8 @@ DATABASES = {
 
 
 
-FRONTEND_URL = config('FRONTEND_URL', default='https://eventx-113d.onrender.com')
-BACKEND_URL = config('BACKEND_URL', default='https://eventx-113d.onrender.com')
+FRONTEND_URL = 'https://event-management-django-sdqd.onrender.com/'
+BACKEND_URL = 'https://event-management-django-sdqd.onrender.com/'
 
 
 
@@ -119,7 +119,6 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
-BACKEND_URL = 'https://eventx-ak64.onrender.com'
 
 PASSWORD_RESET_TIMEOUT = 604800
 LOGIN_REDIRECT_URL = 'home' 
