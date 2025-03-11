@@ -77,10 +77,9 @@ DATABASES = {
 
 
 
-# FRONTEND_URL = config('FRONTEND_URL', default='https://eventx-ak64.onrender.com')
 
-FRONTEND_URL = config('FRONTEND_URL', default='https://eventx-ak64.onrender.com')
-
+FRONTEND_URL = config('FRONTEND_URL', default='https://eventx-113d.onrender.com')
+BACKEND_URL = config('BACKEND_URL', default='https://eventx-113d.onrender.com')
 
 
 
@@ -120,7 +119,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
-BACKEND_URL = 'http://127.0.0.1:8000'
+BACKEND_URL = 'https://eventx-ak64.onrender.com'
 
 PASSWORD_RESET_TIMEOUT = 604800
 LOGIN_REDIRECT_URL = 'home' 
