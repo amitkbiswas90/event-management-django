@@ -70,10 +70,12 @@ WSGI_APPLICATION = 'evnt_mng.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://event_management_db_z3xd_user:XjWtFiOigIfpntGONj0fcvLo4X64pyip@dpg-cuu4b4l6l47c73abi2qg-a.oregon-postgres.render.com/event_management_db_z3xd',
+        default='postgresql://event_management_db_ttx3_user:Hd7nKBx6rTkoBOy7zISkkP9Rx5kyySVq@dpg-cv7nnflumphs73frlba0-a.oregon-postgres.render.com/event_management_db_ttx3',
         conn_max_age=600
     )
 }
+
+
 
 # FRONTEND_URL = config('FRONTEND_URL', default='https://eventx-ak64.onrender.com')
 
